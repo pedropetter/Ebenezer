@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ebenezer Barbearia — Na Regua</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #9A7530;
+    --gold-pale: #F5E6C0;
+    --black: #0A0A0A;
+    --black-2: #111111;
+    --black-3: #1A1A1A;
+    --black-4: #242424;
+    --black-5: #2E2E2E;
+    --white: #F8F4EC;
+    --white-muted: #C8C0B0;
+    --img-lion: url('https://unsplash.com/photos/7iNAjRFzNhs/download?force=true&w=1400');
+    --img-neighborhood: url('https://unsplash.com/photos/-Ygb7nLrh7M/download?force=true&w=1400');
+    --img-shop: url('https://unsplash.com/photos/lCtgUXYrqCo/download?force=true&w=1400');
+    --img-barber: url('https://unsplash.com/photos/IvQeAVeJULw/download?force=true&w=1400');
+    --img-chair: url('https://unsplash.com/photos/YzTsRgxg2xE/download?force=true&w=1400');
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  body.intro-active {
+    overflow: hidden;
+  }
+
+  body > *:not(.intro-overlay) {
+    transition: opacity 0.35s ease;
+  }
+
+  body.intro-active > *:not(.intro-overlay) {
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 240;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background:
+      radial-gradient(circle at center, rgba(201,168,76,0.16) 0%, rgba(201,168,76,0.02) 28%, transparent 55%),
+      linear-gradient(180deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.86) 100%),
+      var(--img-neighborhood) center/cover no-repeat;
+    overflow: hidden;
+  }
+
+  .intro-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 78px, rgba(201,168,76,0.04) 78px 79px),
+      repeating-linear-gradient(0deg, transparent 0 78px, rgba(201,168,76,0.04) 78px 79px);
+    opacity: 0.75;
+  }
+
+  .intro-overlay::after {
+    content: '';
+    position: absolute;
+    inset: -12%;
+    background: radial-gradient(circle at center, rgba(255,214,110,0.18) 0%, transparent 34%);
+    animation: introGlow 2.2s ease-in-out infinite;
+  }
+
+  .intro-overlay.is-leaving {
+    animation: introFadeOut 0.85s ease forwards;
+    pointer-events: none;
+  }
+
+  .intro-shell {
+    position: relative;
+    z-index: 1;
+    width: min(560px, 100%);
+    text-align: center;
+  }
+
+  .intro-lion {
+    position: relative;
+    width: min(62vw, 320px);
+    height: min(62vw, 320px);
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.34);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.42) 100%),
+      var(--img-lion) center/cover no-repeat;
+    animation: introRoar 2.2s cubic-bezier(.2,.7,.2,1) infinite;
+  }
+
+  .intro-lion::before,
+  .intro-lion::after {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.18);
+    animation: introRing 2.2s ease-out infinite;
+  }
+
+  .intro-lion::after {
+    inset: -34px;
+    animation-delay: 0.45s;
+  }
+
+  .intro-kicker {
+    font-size: 0.62rem;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.85rem;
+  }
+
+  .intro-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.4rem, 8vw, 4.8rem);
+    line-height: 0.9;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.65rem;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .intro-title span {
+    display: block;
+    color: var(--gold);
+  }
+
+  .intro-copy {
+    max-width: 34ch;
+    margin: 0 auto 1.25rem;
+    color: var(--white-muted);
+    font-size: 0.84rem;
+    line-height: 1.8;
+  }
+
+  .intro-bar {
+    width: min(220px, 60vw);
+    height: 2px;
+    margin: 0 auto 1.2rem;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .intro-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.85) 50%, transparent 100%);
+    animation: introSweep 1.8s ease-in-out infinite;
+  }
+
+  .intro-skip {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.28);
+    color: var(--gold-pale);
+    padding: 0.7rem 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+
+  .intro-skip:hover {
+    background: rgba(201,168,76,0.08);
+    border-color: rgba(201,168,76,0.48);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dark); }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
+    border-bottom: 0.5px solid rgba(201,168,76,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--black);
+    background: var(--gold);
+    padding: 0.6rem 1.4rem;
+    text-decoration: none;
+    transition: background 0.3s;
+    text-transform: uppercase;
+  }
+
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.72) 44%, rgba(10,10,10,0.86) 100%),
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      var(--img-neighborhood) center/cover no-repeat,
+      var(--black);
+  }
+
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(201,168,76,0.04) 80px),
+      repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(201,168,76,0.04) 80px);
+  }
+
+  .lion-svg {
+    position: absolute;
+    width: min(34vw, 470px);
+    height: min(56vh, 620px);
+    top: 50%;
+    right: 7%;
+    transform: translateY(-50%);
+    border: 1px solid rgba(201,168,76,0.28);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.45);
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.48) 100%),
+      var(--img-lion) center/cover no-repeat;
+    clip-path: polygon(12% 0, 100% 0, 100% 84%, 88% 100%, 0 100%, 0 16%);
+    opacity: 0.92;
+  }
+
+  .lion-svg::after {
+    content: '';
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(201,168,76,0.22);
+    clip-path: inherit;
+  }
+
+  .hero-accent-card {
+    position: absolute;
+    left: 8%;
+    bottom: 10%;
+    z-index: 2;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid rgba(201,168,76,0.18);
+    background: rgba(10,10,10,0.82);
+    backdrop-filter: blur(10px);
+    max-width: 280px;
+  }
+
+  .hero-accent-kicker {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.55rem;
+  }
+
+  .hero-accent-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-accent-copy {
+    font-size: 0.76rem;
+    line-height: 1.7;
+    color: var(--white-muted);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-title span {
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--white-muted);
+    letter-spacing: 0.08em;
+    margin: 1.5rem 0 2.5rem;
+  }
+
+  .hero-divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 0 auto 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold-light);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-secondary {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: transparent;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    border: 1px solid rgba(201,168,76,0.4);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.5;
+    animation: fadeUpDown 2s ease-in-out infinite;
+  }
+
+  @keyframes fadeUpDown {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+    50% { transform: translateX(-50%) translateY(6px); opacity: 0.8; }
+  }
+
+  .hero-scroll span {
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .section-title em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* SOBRE */
+  .about {
+    background: var(--black-2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .about-visual {
+    position: relative;
+    height: 480px;
+  }
+
+  .about-frame {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .about-frame-inner {
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(10,10,10,0.16), rgba(10,10,10,0.58));
+    overflow: hidden;
+  }
+
+  .about-lion {
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.05) 0%, rgba(10,10,10,0.5) 100%),
+      var(--img-shop) center/cover no-repeat;
+    transform: scale(1.04);
+  }
+
+  .about-art-card {
+    position: absolute;
+    left: 1.4rem;
+    bottom: 1.4rem;
+    width: min(46%, 210px);
+    min-height: 150px;
+    padding: 1rem;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.58) 100%),
+      var(--img-chair) center/cover no-repeat;
+    border: 1px solid rgba(201,168,76,0.26);
+    box-shadow: 0 16px 35px rgba(0,0,0,0.28);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .about-art-card span {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-pale);
+    margin-bottom: 0.45rem;
+  }
+
+  .about-art-card strong {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .about-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--gold);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .about-corner.tl { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; }
+  .about-corner.tr { top: -1px; right: -1px; border-top-width: 2px; border-right-width: 2px; }
+  .about-corner.bl { bottom: -1px; left: -1px; border-bottom-width: 2px; border-left-width: 2px; }
+  .about-corner.br { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+
+  .about-badge {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 110px;
+    height: 110px;
+    background: var(--gold);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-badge strong {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--black);
+    line-height: 1;
+  }
+
+  .about-badge span {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--black);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--white-muted);
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-number {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--white-muted);
+    text-transform: uppercase;
+  }
+
+  /* SERVIÇOS */
+  .services {
+    background: var(--black);
+    text-align: center;
+  }
+
+  .services-header { margin-bottom: 3.5rem; }
+  .services-header .section-label { justify-content: center; }
+  .services-header .section-label::before { display: none; }
+  .services-header .section-label::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .services-art-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.9fr 0.9fr;
+    gap: 1rem;
+    margin: 0 auto 2.6rem;
+  }
+
+  .service-art {
+    min-height: 220px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.18);
+    background-color: var(--black-2);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .service-art:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201,168,76,0.42);
+  }
+
+  .service-art::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.08) 0%, rgba(10,10,10,0.72) 100%);
+  }
+
+  .service-art.primary {
+    background-image: var(--img-barber);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .service-art.secondary {
+    background-image: var(--img-neighborhood);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .service-art.tertiary {
+    background-image: var(--img-chair);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .service-art-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 1.3rem;
+    text-align: left;
+  }
+
+  .service-art-content span {
+    display: block;
+    font-size: 0.56rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold-pale);
+    margin-bottom: 0.45rem;
+  }
+
+  .service-art-content strong {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+    display: block;
+    margin-bottom: 0.55rem;
+  }
+
+  .service-art-content p {
+    font-size: 0.76rem;
+    line-height: 1.7;
+    color: rgba(248,244,236,0.78);
+    max-width: 28ch;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .service-card {
+    background: var(--black-2);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: background 0.4s;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.4s;
+  }
+
+  .service-card:hover { background: var(--black-3); }
+  .service-card:hover::before { width: 100%; }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1.5rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    transition: border-color 0.3s;
+  }
+
+  .service-card:hover .service-icon { border-color: var(--gold); }
+
+  .service-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .service-desc {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--white-muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+
+  .service-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .service-price span {
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--white-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* BARBEIROS */
+  .barbers {
+    background: var(--black-2);
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .barbers-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .barber-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    background: linear-gradient(135deg, rgba(201,168,76,0.04), rgba(17,17,17,1) 34%);
+    border: 1px solid rgba(201,168,76,0.15);
+    overflow: hidden;
+  }
+
+  .barber-photo {
+    width: 100%;
+    min-height: 460px;
+    background: var(--black-3);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .barber-photo-inner {
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.08) 0%, rgba(10,10,10,0.42) 100%),
+      var(--img-barber) center/cover no-repeat;
+    transform: scale(1.03);
+  }
+
+  .barber-content {
+    padding: 2.4rem 2.4rem 2.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .barber-initials {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    width: 50px;
+    height: 50px;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--black);
+  }
+
+  .barber-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .barber-role {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .barber-bio {
+    margin: 1.2rem 0 1.6rem;
+    color: var(--white-muted);
+    line-height: 1.85;
+    font-size: 0.86rem;
+    max-width: 44ch;
+  }
+
+  .barber-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .barber-highlight {
+    padding: 0.7rem 0.9rem;
+    border: 1px solid rgba(201,168,76,0.16);
+    background: rgba(201,168,76,0.04);
+    font-size: 0.63rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+  }
+
+  /* AGENDAMENTO */
+  .booking {
+    background: var(--black);
+    border-top: 1px solid rgba(201,168,76,0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .booking-text p {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--white-muted);
+    line-height: 1.9;
+    margin-bottom: 2rem;
+  }
+
+  .booking-visuals {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .booking-visual-card {
+    min-height: 180px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.18);
+    background-color: var(--black-2);
+  }
+
+  .booking-visual-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.12) 0%, rgba(10,10,10,0.72) 100%);
+  }
+
+  .booking-visual-card.primary {
+    background-image: var(--img-shop);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .booking-visual-card.secondary {
+    background-image: var(--img-neighborhood);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .booking-visual-copy {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 1.2rem;
+  }
+
+  .booking-visual-copy span {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold-pale);
+    margin-bottom: 0.45rem;
+  }
+
+  .booking-visual-copy strong {
+    font-family: 'Cinzel', serif;
+    font-size: 0.94rem;
+    line-height: 1.45;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .booking-form {
+    background: var(--black-2);
+    padding: 2.5rem;
+    border: 1px solid rgba(201,168,76,0.2);
+    position: relative;
+  }
+
+  .booking-form::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .form-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.8rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .form-group { margin-bottom: 1.2rem; }
+
+  .fixed-barber-card {
+    padding: 1rem 1.05rem;
+    border: 1px solid rgba(201,168,76,0.2);
+    background:
+      linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02)),
+      var(--black-3);
+  }
+
+  .fixed-barber-label {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.45rem;
+  }
+
+  .fixed-barber-card strong {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+
+  .fixed-barber-card small {
+    display: block;
+    color: var(--white-muted);
+    font-size: 0.74rem;
+    line-height: 1.7;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input,
+  .form-select {
+    width: 100%;
+    background: var(--black-3);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--white);
+    padding: 0.8rem 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    border-color: var(--gold);
+  }
+
+  .form-input::placeholder { color: rgba(200,192,176,0.4); }
+
+  .form-select option {
+    background: var(--black-3);
+    color: var(--white);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .sync-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1.6rem;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid rgba(201,168,76,0.16);
+    background: rgba(201,168,76,0.04);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+  }
+
+  .sync-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #6f6f6f;
+    box-shadow: 0 0 0 0 rgba(201,168,76,0.35);
+    transition: background 0.3s ease;
+  }
+
+  .sync-badge[data-state="syncing"] .sync-dot {
+    background: var(--gold);
+    animation: syncPulse 1.4s infinite;
+  }
+
+  .sync-badge[data-state="synced"] .sync-dot {
+    background: #73a86b;
+  }
+
+  .sync-badge[data-state="error"] .sync-dot {
+    background: #b96262;
+  }
+
+  @keyframes syncPulse {
+    0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.45); }
+    70% { box-shadow: 0 0 0 10px rgba(201,168,76,0); }
+    100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  }
+
+  #calendar {
+    border: 1px solid rgba(201,168,76,0.16);
+    background: var(--black-3);
+    margin-bottom: 1.5rem;
+  }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid rgba(201,168,76,0.16);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .cal-month {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .cal-nav {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(201,168,76,0.25);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .cal-nav:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .cal-weekday {
+    padding: 0.75rem 0.2rem;
+    text-align: center;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(200,192,176,0.6);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    color: var(--white);
+    position: relative;
+    transition: all 0.22s ease;
+  }
+
+  .cal-day.empty {
+    opacity: 0.15;
+  }
+
+  .cal-day.available {
+    cursor: pointer;
+  }
+
+  .cal-day.available:hover {
+    background: rgba(201,168,76,0.08);
+    color: var(--gold);
+  }
+
+  .cal-day.past,
+  .cal-day.sunday {
+    opacity: 0.18;
+    cursor: not-allowed;
+  }
+
+  .cal-day.today {
+    color: var(--gold);
+  }
+
+  .cal-day.today::after {
+    content: '';
+    position: absolute;
+    bottom: 0.45rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .cal-day.selected {
+    background: var(--gold);
+    color: var(--black);
+    font-weight: 700;
+  }
+
+  .slots-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .slot {
+    padding: 0.85rem 0.55rem;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: var(--black-3);
+    color: var(--white);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .slot:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .slot.slot-selected {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--black);
+    font-weight: 700;
+  }
+
+  .slot.slot-taken {
+    opacity: 0.22;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  .slot-empty {
+    padding: 1.2rem 1rem;
+    border: 1px dashed rgba(201,168,76,0.22);
+    color: var(--white-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1.4rem;
+  }
+
+  .summary-box {
+    display: none;
+    margin: 0 0 1.2rem;
+    padding: 0.95rem 1rem;
+    background: var(--black-3);
+    border-left: 2px solid var(--gold);
+    color: var(--white-muted);
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  .form-submit {
+    width: 100%;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--gold);
+    padding: 1rem;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.3s;
+  }
+
+  .form-submit:hover { background: var(--gold-light); }
+
+  .form-submit:disabled {
+    opacity: 0.75;
+    cursor: wait;
+  }
+
+  .booking-success {
+    display: none;
+    margin-top: 1.3rem;
+    padding: 1.4rem;
+    border: 1px solid rgba(201,168,76,0.22);
+    background: var(--black-3);
+    text-align: center;
+  }
+
+  .booking-success.show {
+    display: block;
+  }
+
+  .success-icon {
+    font-size: 1.9rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .success-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .success-text {
+    color: var(--white-muted);
+    line-height: 1.7;
+    font-size: 0.84rem;
+  }
+
+  .admin-open-link {
+    color: var(--gold);
+  }
+
+  .admin-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(8px);
+    z-index: 180;
+  }
+
+  .admin-overlay.open {
+    display: flex;
+  }
+
+  .admin-shell {
+    width: min(1080px, 100%);
+    max-height: calc(100vh - 4rem);
+    overflow: auto;
+    background: var(--black-2);
+    border: 1px solid rgba(201,168,76,0.18);
+    padding: 1.8rem;
+    position: relative;
+  }
+
+  .admin-shell-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .admin-kicker {
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .admin-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.35rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .admin-copy {
+    margin-top: 0.55rem;
+    color: var(--white-muted);
+    font-size: 0.86rem;
+    line-height: 1.7;
+    max-width: 620px;
+  }
+
+  .admin-close {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(201,168,76,0.25);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.22s ease;
+  }
+
+  .admin-close:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .admin-filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .admin-stat {
+    background: var(--black-3);
+    border: 1px solid rgba(201,168,76,0.12);
+    padding: 1rem;
+  }
+
+  .admin-stat-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+    margin-bottom: 0.45rem;
+  }
+
+  .admin-stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.45rem;
+    color: var(--gold);
+  }
+
+  .admin-bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .admin-booking-row,
+  .admin-empty {
+    background: var(--black-3);
+    border: 1px solid rgba(201,168,76,0.12);
+    padding: 1rem;
+  }
+
+  .admin-empty {
+    color: var(--white-muted);
+    text-align: center;
+    font-size: 0.82rem;
+  }
+
+  .admin-booking-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .admin-booking-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .admin-booking-service {
+    color: var(--white-muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .admin-status-pill {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid rgba(201,168,76,0.18);
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .status-confirmado { color: var(--gold); }
+  .status-atendimento { color: #90c2ff; }
+  .status-finalizado { color: #79b57b; }
+  .status-faltou { color: #d77e7e; }
+
+  .admin-booking-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .admin-meta-chip {
+    padding: 0.38rem 0.6rem;
+    background: rgba(201,168,76,0.05);
+    border: 1px solid rgba(201,168,76,0.12);
+    font-size: 0.64rem;
+    color: var(--white-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .admin-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .admin-action-btn,
+  .admin-link-btn {
+    padding: 0.6rem 0.85rem;
+    border: 1px solid rgba(201,168,76,0.18);
+    background: transparent;
+    color: var(--white-muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.22s ease;
+  }
+
+  .admin-action-btn:hover,
+  .admin-link-btn:hover,
+  .admin-action-btn.active {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 200;
+    padding: 0.9rem 1.2rem;
+    background: var(--black-3);
+    border: 1px solid rgba(201,168,76,0.18);
+    color: var(--gold);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* DEPOIMENTOS */
+  .testimonials {
+    background: var(--black-2);
+    text-align: center;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .testimonials-header { margin-bottom: 3rem; }
+  .testimonials-header .section-label { justify-content: center; }
+  .testimonials-header .section-label::before { display: none; }
+  .testimonials-header .section-label::after {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .testimonial-card {
+    background: var(--black-3);
+    padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.1);
+    text-align: left;
+    position: relative;
+  }
+
+  .testimonial-card::before {
+    content: '\201C';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    color: var(--gold);
+    opacity: 0.2;
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    line-height: 1;
+  }
+
+  .testimonial-stars {
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--white-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .author-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--gold-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--black);
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .author-tag {
+    font-size: 0.6rem;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black-2);
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 4rem 2rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    margin-bottom: 2rem;
+  }
+
+  .footer-brand-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-brand-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--white-muted);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-contact p {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--white-muted);
+    line-height: 2;
+  }
+
+  .footer-contact a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .footer-col-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-links {
+    list-style: none;
+  }
+
+  .footer-links li {
+    margin-bottom: 0.6rem;
+  }
+
+  .footer-links a {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--white-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+    letter-spacing: 0.05em;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 0.65rem;
+    font-weight: 300;
+    color: rgba(200,192,176,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-emblem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-emblem-line {
+    width: 30px;
+    height: 1px;
+    background: rgba(201,168,76,0.3);
+  }
+
+  .footer-emblem-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(201,168,76,0.4);
+    text-transform: uppercase;
+  }
+
+  /* DIVIDER ORNAMENT */
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 0;
+  }
+
+  .ornament-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,168,76,0.3));
+  }
+
+  .ornament-line.rev {
+    background: linear-gradient(to left, transparent, rgba(201,168,76,0.3));
+  }
+
+  .ornament-diamond {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .ornament-diamond.sm {
+    width: 4px;
+    height: 4px;
+    background: rgba(201,168,76,0.5);
+  }
+
+  /* WHATSAPP FLOAT */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .whatsapp-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--black);
+    background: var(--gold);
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s;
+  }
+
+  .whatsapp-float:hover .whatsapp-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .whatsapp-btn {
+    width: 50px;
+    height: 50px;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .whatsapp-btn:hover { background: var(--gold-light); }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes introGlow {
+    0%, 100% { transform: scale(0.92); opacity: 0.3; }
+    50% { transform: scale(1.06); opacity: 0.8; }
+  }
+
+  @keyframes introRoar {
+    0%, 100% { transform: scale(0.96); filter: saturate(0.95) brightness(0.92); }
+    25% { transform: scale(1.02); filter: saturate(1.08) brightness(1.02); }
+    45% { transform: scale(1.08); filter: saturate(1.18) brightness(1.1); }
+    70% { transform: scale(1.01); filter: saturate(1.04) brightness(1.02); }
+  }
+
+  @keyframes introRing {
+    0% { transform: scale(0.84); opacity: 0; }
+    20% { opacity: 0.42; }
+    100% { transform: scale(1.18); opacity: 0; }
+  }
+
+  @keyframes introSweep {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes introFadeOut {
+    0% { opacity: 1; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
+  }
+
+  .hero-content > * {
+    animation: fadeIn 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-eyebrow { animation-delay: 0.2s; }
+  .hero-title { animation-delay: 0.4s; }
+  .hero-subtitle { animation-delay: 0.6s; }
+  .hero-divider { animation-delay: 0.7s; }
+  .hero-actions { animation-delay: 0.8s; }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { justify-content: flex-end; padding-top: 7rem; }
+    .lion-svg {
+      width: min(72vw, 360px);
+      height: 340px;
+      top: 8rem;
+      right: 50%;
+      transform: translateX(50%);
+      opacity: 0.45;
+    }
+    .hero-accent-card {
+      position: relative;
+      left: auto;
+      bottom: auto;
+      margin-top: 2rem;
+      max-width: none;
+    }
+    .about { grid-template-columns: 1fr; gap: 3rem; }
+    .about-visual { height: 300px; }
+    .about-art-card { width: calc(100% - 2.8rem); }
+    .services-art-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .barber-card { grid-template-columns: 1fr; }
+    .barber-photo { min-height: 360px; }
+    .barber-content { padding: 1.8rem 1.4rem; }
+    .booking { grid-template-columns: 1fr; gap: 2.5rem; }
+    .booking-visuals { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .slots-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .admin-overlay { padding: 1rem; }
+    .admin-shell { padding: 1rem; max-height: calc(100vh - 2rem); }
+    .admin-filters,
+    .admin-stats { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro-overlay::after,
+    .intro-lion,
+    .intro-lion::before,
+    .intro-lion::after,
+    .intro-bar::after {
+      animation: none;
+    }
+
+    .hero-content > * {
+      animation-duration: 0.01ms;
+      opacity: 1;
+    }
+  }
+</style>
+</head>
+<body class="intro-active">
+
+<div class="intro-overlay" id="introOverlay" aria-hidden="true">
+  <div class="intro-shell">
+    <div class="intro-lion" aria-hidden="true"></div>
+    <div class="intro-kicker">Ebenezer apresenta</div>
+    <div class="intro-title">Ebenezer <span>Barbearia</span></div>
+    <p class="intro-copy">O rugido abre a casa. Depois disso, e corte na regua, resenha e visao da quebrada.</p>
+    <div class="intro-bar" aria-hidden="true"></div>
+    <button class="intro-skip" id="skipIntroBtn" type="button">Entrar Direto</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Ebenezer</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">A Barbearia</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#barbeiros">Barbeiro</a></li>
+    <li><a href="#agendamento">Agendamento</a></li>
+  </ul>
+  <a href="#agendamento" class="nav-cta">Agendar Agora</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+
+  <div class="lion-svg" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Barbearia da Quebrada</div>
+    <h1 class="hero-title">
+      Ebenezer
+      <span>Barbearia</span>
+    </h1>
+    <p class="hero-subtitle">Corte na regua, resenha boa e visao de favela</p>
+    <div class="hero-divider"></div>
+    <div class="hero-actions">
+      <a href="#agendamento" class="btn-primary"><span>Agendar Horário</span></a>
+      <a href="#servicos" class="btn-secondary">Ver Serviços</a>
+    </div>
+  </div>
+
+  <div class="hero-accent-card">
+    <span class="hero-accent-kicker">Visao da quebrada</span>
+    <div class="hero-accent-title">Barbearia raiz, corte bem feito</div>
+    <p class="hero-accent-copy">Pegada urbana, ambiente simples e presenca forte no visual. Aqui o foco e sair alinhado e satisfeito.</p>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Explorar</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section class="about" id="sobre">
+  <div class="about-visual">
+    <div class="about-frame">
+      <div class="about-corner tl"></div>
+      <div class="about-corner tr"></div>
+      <div class="about-corner bl"></div>
+      <div class="about-corner br"></div>
+      <div class="about-frame-inner">
+        <div class="about-lion" aria-hidden="true"></div>
+        <div class="about-art-card">
+          <span>Clima da quebrada</span>
+          <strong>Barbearia raiz, resenha e corte alinhado</strong>
+        </div>
+      </div>
+    </div>
+    <div class="about-badge">
+      <strong>5★</strong>
+      <span>Avaliação<br>dos clientes</span>
+    </div>
+  </div>
+
+  <div class="about-text">
+    <div class="section-label">Sobre nós</div>
+    <h2 class="section-title">Uma barbearia<br><em>com identidade</em></h2>
+    <p>A Ebenezer nasceu com a cara da quebrada: atendimento direto, ambiente sem frescura e corte bem feito para quem gosta de sair na regua.</p>
+    <p>A proposta aqui e simples: um barbeiro, atencao no detalhe e um espaco com energia de favela, conversa boa e muito respeito com cada cliente.</p>
+    <div class="about-stats">
+      <div class="stat-item">
+        <span class="stat-number">500+</span>
+        <span class="stat-label">Clientes satisfeitos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">1</span>
+        <span class="stat-label">Barbeiro da casa</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">6d</span>
+        <span class="stat-label">Por semana</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section class="services" id="servicos">
+  <div class="services-header">
+    <div class="section-label">O que oferecemos</div>
+    <h2 class="section-title">Nossos <em>Serviços</em></h2>
+  </div>
+
+  <div class="services-art-grid">
+    <article class="service-art primary">
+      <div class="service-art-content">
+        <span>Na regua</span>
+        <strong>Corte forte e estilo da rua</strong>
+        <p>Maquina, tesoura e acabamento na medida para valorizar o estilo de cada cliente.</p>
+      </div>
+    </article>
+    <article class="service-art secondary">
+      <div class="service-art-content">
+        <span>Atmosfera</span>
+        <strong>Barbearia de favela</strong>
+        <p>Espaco raiz, simples e vivido, com a energia da quebrada do jeito que tem que ser.</p>
+      </div>
+    </article>
+    <article class="service-art tertiary">
+      <div class="service-art-content">
+        <span>Detalhe</span>
+        <strong>Visual marcante</strong>
+        <p>Cadeira, espelho e enquadramento com pegada urbana e personalidade.</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 3v18M18 3v18M3 9h18M3 15h18"/>
+        </svg>
+      </div>
+      <div class="service-name">Corte Clássico</div>
+      <p class="service-desc">Tesoura ou máquina, com acabamento impecável e alinhamento preciso.</p>
+      <div class="service-price">R$ 40 <span>/ sessão</span></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+          <line x1="9" y1="9" x2="9.01" y2="9"/>
+          <line x1="15" y1="9" x2="15.01" y2="9"/>
+        </svg>
+      </div>
+      <div class="service-name">Barba Completa</div>
+      <p class="service-desc">Modelagem, navalha quente e hidratação para uma barba de respeito.</p>
+      <div class="service-price">R$ 35 <span>/ sessão</span></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+        </svg>
+      </div>
+      <div class="service-name">Corte + Barba</div>
+      <p class="service-desc">O combo completo. Cabelo e barba tratados com a mesma excelência.</p>
+      <div class="service-price">R$ 70 <span>/ sessão</span></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <div class="service-name">Pigmentação</div>
+      <p class="service-desc">Coloração e pigmentação capilar com produtos de primeira linha.</p>
+      <div class="service-price">R$ 60 <span>+ materiais</span></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 12h8M12 8v8"/>
+        </svg>
+      </div>
+      <div class="service-name">Hidratação</div>
+      <p class="service-desc">Tratamento profundo para cabelo e barba, devolvendo saúde e brilho.</p>
+      <div class="service-price">R$ 45 <span>/ sessão</span></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      </div>
+      <div class="service-name">Pacote da Casa</div>
+      <p class="service-desc">Corte + Barba + Hidratação + Sobrancelha. O combo mais completo e pedido da barbearia.</p>
+      <div class="service-price">R$ 110 <span>/ combo</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BARBEIROS -->
+<section class="barbers" id="barbeiros">
+  <div class="section-label">Profissional da casa</div>
+  <h2 class="section-title">O <em>Barbeiro</em></h2>
+
+  <div class="barbers-grid">
+    <div class="barber-card">
+      <div class="barber-photo">
+        <div class="barber-photo-inner"></div>
+        <div class="barber-initials">MR</div>
+      </div>
+      <div class="barber-content">
+        <div class="barber-name">Marcos Reis</div>
+        <div class="barber-role">Barbeiro Senior · Fundador</div>
+        <p class="barber-bio">Marcos segura o atendimento da casa no dia a dia, com corte firme, barba alinhada e aquela leitura de estilo de quem vive a barbearia de verdade.</p>
+        <div class="barber-highlights">
+          <span class="barber-highlight">Corte classico</span>
+          <span class="barber-highlight">Barba completa</span>
+          <span class="barber-highlight">Na regua</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDAMENTO -->
+<section class="booking" id="agendamento">
+  <div class="booking-text">
+    <div class="section-label">Reserve seu horário</div>
+    <h2 class="section-title">Seu próximo <em>corte na regua</em><br>começa aqui</h2>
+    <p>Agendamento simples e sem enrolacao. Escolha o servico, veja os horarios livres e confirme seu atendimento com Marcos Reis pelo WhatsApp.</p>
+    <a href="#agendamento" class="btn-primary"><span>Agendar via WhatsApp</span></a>
+    <div class="booking-visuals">
+      <div class="booking-visual-card primary">
+        <div class="booking-visual-copy">
+          <span>Vivencia</span>
+          <strong>Barbearia raiz, urbana e com identidade propria</strong>
+        </div>
+      </div>
+      <div class="booking-visual-card secondary">
+        <div class="booking-visual-copy">
+          <span>Detalhe</span>
+          <strong>Resenha, corte e visao no mesmo espaco</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-form">
+    <div class="form-title">Preencha os dados</div>
+
+    <div class="form-group">
+      <label class="form-label">Seu Nome</label>
+      <input type="text" class="form-input" placeholder="Como devemos chamar você?">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">WhatsApp</label>
+      <input type="tel" class="form-input" placeholder="(24) 9 0000-0000">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Atendimento</label>
+      <div class="fixed-barber-card">
+        <span class="fixed-barber-label">Barbeiro da casa</span>
+        <strong>Marcos Reis - Fundador</strong>
+        <small>Corte, barba e finalizacao com atendimento direto de quem toca a barbearia.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Serviço</label>
+      <select class="form-select">
+        <option value="">Selecione o serviço</option>
+        <option>Corte Clássico — R$ 40</option>
+        <option>Barba Completa — R$ 35</option>
+        <option>Corte + Barba — R$ 70</option>
+        <option>Pigmentação — R$ 60</option>
+        <option>Pacote da Casa — R$ 110</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input type="date" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horário</label>
+        <select class="form-select">
+          <option>09:00</option>
+          <option>10:00</option>
+          <option>11:00</option>
+          <option>13:00</option>
+          <option>14:00</option>
+          <option>15:00</option>
+          <option>16:00</option>
+          <option>17:00</option>
+          <option>18:00</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="form-submit">Confirmar Agendamento</button>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="testimonials" id="depoimentos">
+  <div class="testimonials-header">
+    <div class="section-label">O que dizem</div>
+    <h2 class="section-title">Clientes que <em>voltam sempre</em></h2>
+  </div>
+
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">Melhor barbearia que já fui. O ambiente já te coloca no clima, e o resultado do corte superou minhas expectativas. Virei cliente fixo.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">RO</div>
+        <div>
+          <div class="author-name">Rafael Oliveira</div>
+          <div class="author-tag">Cliente desde 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">O Marcos tem uma leitura muito forte de estilo. Minha barba ficou marcada do jeito certo e o acabamento final elevou o visual inteiro.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">LM</div>
+        <div>
+          <div class="author-name">Lucas Mendonça</div>
+          <div class="author-tag">Cliente VIP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">Fechei o pacote da casa e saí de lá todo alinhado. Corte, barba e acabamento vieram no capricho. Atendimento firme do começo ao fim.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">PC</div>
+        <div>
+          <div class="author-name">Pedro Costa</div>
+          <div class="author-tag">Pacote da Casa</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">Ebenezer</div>
+      <div class="footer-brand-tagline">Corte na regua e resenha da quebrada</div>
+      <div class="footer-contact">
+        <p>Resende, RJ</p>
+        <p>📞 <a href="tel:+5524998840803">(24) 9 9884-0803</a></p>
+        <p>Seg–Sáb: 09h às 20h</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Serviços</div>
+      <ul class="footer-links">
+        <li><a href="#servicos">Corte Clássico</a></li>
+        <li><a href="#servicos">Barba Completa</a></li>
+        <li><a href="#servicos">Corte + Barba</a></li>
+        <li><a href="#servicos">Pigmentação</a></li>
+        <li><a href="#servicos">Pacote da Casa</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Navegação</div>
+      <ul class="footer-links">
+        <li><a href="#sobre">A Barbearia</a></li>
+        <li><a href="#barbeiros">Barbeiro</a></li>
+        <li><a href="#agendamento">Agendamento</a></li>
+        <li><a href="https://instagram.com/ebenezer_barbearia01" target="_blank">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Ebenezer Barbearia — Todos os direitos reservados</span>
+    <div class="footer-emblem">
+      <div class="footer-emblem-line"></div>
+      <span class="footer-emblem-text">Na Regua</span>
+      <div class="footer-emblem-line"></div>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<div class="whatsapp-float">
+  <span class="whatsapp-label">Falar no WhatsApp</span>
+  <a href="https://wa.me/5524998840803" target="_blank" class="whatsapp-btn" aria-label="WhatsApp">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#0A0A0A">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+    </svg>
+  </a>
+</div>
+
+<script src="ebenezer_barbearia.js"></script>
+
+</body>
+</html>
